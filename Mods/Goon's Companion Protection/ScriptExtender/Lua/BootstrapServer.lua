@@ -81,36 +81,33 @@ local companionPassives = {
     }
 }
 
+-- Define the global blocking status
+local GLOBAL_BLOCKING_STATUS = "GOON_BUFF_COMPANION_BLOCKER"
+
+-- Function to apply the global blocking status to a character
+local function applyBlockingStatus(charID)
+    -- Apply the blocking status to prevent passives from being added
+    Osi.ApplyStatus(charID, GLOBAL_BLOCKING_STATUS, -1, 1, charID)
+end
+
 -- Function to apply passives, boosts, and optional statuses
 local function applyPassiveAndBoostsWithHealth(charID)
     local config = companionPassives[charID]
     if config and Osi.IsPartyMember(charID, 0) == 0 then
-        -- Apply the specific passive
-        Osi.AddPassive(charID, config.passive)
+        -- Check if the companion has the blocking status
+        if Osi.HasStatus(charID, config.status) == 0 then
+            -- Apply the specific passive
+            Osi.AddPassive(charID, config.passive)
 
-        -- Apply boosts
-        for _, boost in ipairs(config.boosts) do
-            Osi.AddBoosts(charID, boost.boost, charID, charID)
-        end
+            -- Apply boosts
+            for _, boost in ipairs(config.boosts) do
+                Osi.AddBoosts(charID, boost.boost, charID, charID)
+            end
 
-        -- Apply status if configured
-        if config.status then
-            Osi.ApplyStatus(charID, config.status, -1, 1, charID)
-        end
-
-        -- Manage health to ensure consistency
-        local entityHandle = Ext.Entity.UuidToHandle(charID)
-        if entityHandle and entityHandle.Health then
-            local currentHp = entityHandle.Health.Hp
-            local subscription
-
-            subscription = Ext.Entity.Subscribe("Health", function(health, _, _)
-                health.Health.Hp = currentHp
-                health:Replicate("Health")
-                if subscription then
-                    Ext.Entity.Unsubscribe(subscription)
-                end
-            end, entityHandle)
+            -- Apply status if configured
+            if config.status then
+                Osi.ApplyStatus(charID, config.status, -1, 1, charID)
+            end
         end
     end
 end
@@ -137,35 +134,32 @@ end
 -- Function to handle combat start and end
 local function handleCombat(isCombatStart)
     for charID, _ in pairs(companionPassives) do
-        if Osi.IsPartyMember(charID, 0) == 0 then
-            if isCombatStart then
-                applyPassiveAndBoostsWithHealth(charID)
-            else
-                removePassiveAndBoostsWithHealth(charID)
-            end
+        if isCombatStart then
+            applyPassiveAndBoostsWithHealth(charID)
         end
     end
 end
+
 
 -- Listener for combat start (apply buffs)
 Ext.Osiris.RegisterListener("EnteredCombat", 2, "before", function(object, combat)
     handleCombat(true)  -- Apply buffs at the start of combat
 end)
 
--- Listener for combat end (remove buffs)
+-- Listener for combat ongoing (apply buffs as needed)
 Ext.Osiris.RegisterListener("CombatEnded", 2, "after", function(combatGuid)
-    handleCombat(false)  -- Remove buffs at the end of combat
+    handleCombat(true)  -- Reapply buffs in case of any changes during combat
 end)
 
--- Listeners for applying and removing passives and boosts when characters join/leave the party
+
+-- Listener for when a character joins the party
 Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(charID)
     if companionPassives[charID] then
-        applyPassiveAndBoostsWithHealth(charID)
-    end
-end)
+        -- Apply the blocking status to prevent the passive from being applied
+        applyBlockingStatus(charID)
 
-Ext.Osiris.RegisterListener("CharacterLeftParty", 1, "after", function(charID)
-    if companionPassives[charID] then
+        -- Remove any existing passives, boosts, and statuses
         removePassiveAndBoostsWithHealth(charID)
     end
 end)
+
