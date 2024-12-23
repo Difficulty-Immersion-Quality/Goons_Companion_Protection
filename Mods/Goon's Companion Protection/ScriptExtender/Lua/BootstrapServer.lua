@@ -16,10 +16,9 @@ local companionPassives = {
     ["S_Player_Minsc_0de603c5-42e2-4811-9dad-f652de080eba"] = {
         passive = "Goon_Buff_Companion_Temporary_Minsc",
         boosts = {
-            { boost = "IncreaseMaxHP(15%)" },
-            { boost = "DamageReduction(Melee,5)" }
+            { boost = "DamageReduction(All,3)" }
         },
-        status = nil
+        status = "GOON_BUFF_COMPANION_TEMPHP_30"
     --},
     --["S_Player_Gale_ad9af97d-75da-406a-ae13-7071c563f604"] = {
         --passive = "Goon_Buff_Companion_Temporary_Gale",
@@ -69,18 +68,16 @@ local companionPassives = {
     ["S_GOB_DrowCommander_25721313-0c15-4935-8176-9f134385451b"] = {
         passive = "Goon_Buff_Companion_Temporary_Minthara",
         boosts = {
-            { boost = "IncreaseMaxHP(30)" },
             { boost = "DamageReduction(All,3)" }
         },
-        status = nil -- No special status for Minthara
+        status = "GOON_BUFF_COMPANION_TEMPHP_30"
     },
     ["S_GLO_Halsin_7628bc0e-52b8-42a7-856a-13a6fd413323"] = {
         passive = "Goon_Buff_Companion_Temporary_Halsin",
         boosts = {
-            { boost = "IncreaseMaxHP(30)" },
             { boost = "DamageReduction(All,3)" }
         },
-        status = nil -- No special status for Halsin
+        status = "GOON_BUFF_COMPANION_TEMPHP_30"
     }
 }
 
