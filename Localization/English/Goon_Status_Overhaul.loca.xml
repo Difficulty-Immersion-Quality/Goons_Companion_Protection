@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <contentList>
 	<content contentuid="h6afb49ecg0afdg4027g98cdge75b2997bd61" version="1">Boon of the Moon Maiden</content>
-	<content contentuid="hf3098a8ag8411g4347g97a3gba624e74aa10" version="1"></content>
+	<content contentuid="hf3098a8ag8411g4347g97a3gba624e74aa10" version="1">Your hit point maximum increased by [1], damage taken from all sources is reduced by [2] and you have &lt;LSTag Tooltip="Advantage"&gt;Advantage&lt;/LSTag&gt; in all &lt;LSTag Tooltip="SavingThrow"&gt;Saving Throws&lt;/LSTag&gt;.</content>
 
 	<content contentuid="h36209bb6g8c0bg4c50gb164gbef07a03c794" version="1">Buttkicking for Evil?</content>
 	<content contentuid="h588f7502g90e0g4cc1ga9a8g7f6776d6d1c6" version="1"></content>
@@ -16,7 +16,7 @@
 	<content contentuid="h3ba4cdedg1630g47beg9418g0f05a79784b1" version="1"></content>
 
 	<content contentuid="h495ebdceg09aag474cg9fa6gb719379cf2b2" version="1">Wyll's Ego</content>
-	<content contentuid="hd9a015f3g662fg4f0aga8f3g646ef53f5e10" version="1">Your hit point maximum increased by [1] and damage taken from all sources is reduced by [2].</content>
+	<content contentuid="hd9a015f3g662fg4f0aga8f3g646ef53f5e10" version="1">You gain [1] &lt;LSTag Tooltip="TemporaryHitPoints"&gt;temporary hit points&lt; and damage taken from all sources is reduced by [2].</content>
 
 	<content contentuid="h34376b3cg778fg4fa3g84dbg191ad2976814" version="1">Empowering Amnesia</content>
 	<content contentuid="h451cd6a9gc00fg436cga477g361e682cbab8" version="1"></content>
@@ -28,7 +28,7 @@
 	<content contentuid="hdf952ea6g01f4g4708ga465g7216cd721c9f" version="1"></content>
 
 	<content contentuid="h58b02c9dg26eag42deg8481g5c1aa721e8f7" version="1">Unbearable Goblins</content>
-	<content contentuid="h64c1abe5ge68fg4696g8593gbfa8f526107d" version="1"></content>
+	<content contentuid="h64c1abe5ge68fg4696g8593gbfa8f526107d" version="1">Your hit point maximum increased by [1] and damage taken from all sources is reduced by [2].</content>
 
 	<content contentuid="h9a0c39bfg34a6g44ddgbdcdgde0109b0e026" version="1">Goon's Protection</content>
     <content contentuid="hea3f4b93gb5dbg4ebeg9a3bgf6f4f838a63b" version="1">This character is under the protection of Goonsack, being granted [1] &lt;LSTag Tooltip="TemporaryHitPoints"&gt;temporary hit points&lt;/LSTag&gt; until recruitment.</content>

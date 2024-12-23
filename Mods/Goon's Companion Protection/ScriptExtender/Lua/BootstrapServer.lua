@@ -1,18 +1,25 @@
--- Table of specific companion passives and their associated boosts
+-- Table of specific companion passives and their associated boosts and statuses
 local companionPassives = {
     ["S_Player_Jaheira_91b6b200-7d00-4d62-8dc9-99e8339dfa1a"] = {
         passive = "Goon_Buff_Companion_Temporary_Jaheira",
         boosts = {
-            { boost = "IncreaseMaxHP(10%)" },
-            { boost = "DamageReduction(All,10)" }
-        }
+            { boost = "DamageReduction(All,3)" },
+            { boost = "Advantage(SavingThrow, Strength)" },
+            { boost = "Advantage(SavingThrow, Dexterity)" },
+            { boost = "Advantage(SavingThrow, Constitution)" },
+            { boost = "Advantage(SavingThrow, Intelligence)" },
+            { boost = "Advantage(SavingThrow, Wisdom)" },
+            { boost = "Advantage(SavingThrow, Charisma)" }
+        },
+        status = nil -- No special status for Jaheira
     },
     ["S_Player_Minsc_0de603c5-42e2-4811-9dad-f652de080eba"] = {
         passive = "Goon_Buff_Companion_Temporary_Minsc",
         boosts = {
             { boost = "IncreaseMaxHP(15%)" },
             { boost = "DamageReduction(Melee,5)" }
-        }
+        },
+        status = nil -- No special status for Minsc
     --},
     --["S_Player_Gale_ad9af97d-75da-406a-ae13-7071c563f604"] = {
         --passive = "Goon_Buff_Companion_Temporary_Gale",
@@ -38,9 +45,9 @@ local companionPassives = {
     ["S_Player_Wyll_c774d764-4a17-48dc-b470-32ace9ce447d"] = {
         passive = "Goon_Buff_Companion_Temporary_Wyll",
         boosts = {
-            { boost = "IncreaseMaxHP(20%)" },
-            { boost = "DamageReduction(All,15)" }
-        }
+            { boost = "DamageReduction(All,3)" }
+        },
+        status = "GOON_BUFF_COMPANION_TEMPHP_30"
     --},
     --["S_Player_ShadowHeart_3ed74f06-3c60-42dc-83f6-f034cb47c679"] = {
         --passive = "Goon_Buff_Companion_Temporary_ShadowHeart",
@@ -59,21 +66,22 @@ local companionPassives = {
     ["S_GOB_DrowCommander_25721313-0c15-4935-8176-9f134385451b"] = {
         passive = "Goon_Buff_Companion_Temporary_Minthara",
         boosts = {
-            { boost = "IncreaseMaxHP(15%)" },
-            { boost = "DamageReduction(Melee,5)" }
-        }
+            { boost = "IncreaseMaxHP(30)" },
+            { boost = "DamageReduction(All,3)" }
+        },
+        status = nil -- No special status for Minthara
     },
     ["S_GLO_Halsin_7628bc0e-52b8-42a7-856a-13a6fd413323"] = {
         passive = "Goon_Buff_Companion_Temporary_Halsin",
         boosts = {
-            { boost = "IncreaseMaxHP(15%)" },
-            { boost = "DamageReduction(Healing,10)" }
-        }
+            { boost = "IncreaseMaxHP(30)" },
+            { boost = "DamageReduction(All,3)" }
+        },
+        status = nil -- No special status for Halsin
     }
 }
 
-
--- Function to apply passives and boosts with health management
+-- Function to apply passives, boosts, and optional statuses
 local function applyPassiveAndBoostsWithHealth(charID)
     local config = companionPassives[charID]
     if config and Osi.IsPartyMember(charID, 0) == 0 then
@@ -83,6 +91,11 @@ local function applyPassiveAndBoostsWithHealth(charID)
         -- Apply boosts
         for _, boost in ipairs(config.boosts) do
             Osi.AddBoosts(charID, boost.boost, charID, charID)
+        end
+
+        -- Apply status if configured
+        if config.status then
+            Osi.ApplyStatus(charID, config.status, -1, 1, charID)
         end
 
         -- Manage health to ensure consistency
@@ -102,7 +115,7 @@ local function applyPassiveAndBoostsWithHealth(charID)
     end
 end
 
--- Function to remove passives and boosts with health management
+-- Function to remove passives, boosts, and optional statuses
 local function removePassiveAndBoostsWithHealth(charID)
     local config = companionPassives[charID]
     if config and Osi.IsPartyMember(charID, 1) == 1 then
@@ -113,29 +126,31 @@ local function removePassiveAndBoostsWithHealth(charID)
         for _, boost in ipairs(config.boosts) do
             Osi.RemoveBoosts(charID, boost.boost, 0, charID, charID)
         end
+
+        -- Remove status if configured
+        if config.status then
+            Osi.RemoveStatus(charID, config.status)
+        end
     end
 end
 
--- Listener for when gameplay starts
+-- Listeners for applying and removing passives and boosts
 Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(level_name, is_editor_mode)
-    -- Apply passives and boosts to all companions who are not in the party yet
     for charID, _ in pairs(companionPassives) do
-        if Osi.IsPartyMember(charID, 0) == 0 then  -- Check if the character is not in the party
+        if Osi.IsPartyMember(charID, 0) == 0 then
             applyPassiveAndBoostsWithHealth(charID)
         end
     end
 end)
 
--- Listener for when a character joins the party
 Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(charID)
-    if companionPassives[charID] then  -- Only apply logic for known companions
-        removePassiveAndBoostsWithHealth(charID)
+    if companionPassives[charID] then
+        applyPassiveAndBoostsWithHealth(charID)
     end
 end)
 
--- Listener for when a character leaves the party
 Ext.Osiris.RegisterListener("CharacterLeftParty", 1, "after", function(charID)
-    if companionPassives[charID] then  -- Only apply logic for known companions
-        applyPassiveAndBoostsWithHealth(charID)
+    if companionPassives[charID] then
+        removePassiveAndBoostsWithHealth(charID)
     end
 end)
