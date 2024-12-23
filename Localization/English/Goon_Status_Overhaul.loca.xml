@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <contentList>
 	<content contentuid="h6afb49ecg0afdg4027g98cdge75b2997bd61" version="1">Boon of the Moon Maiden</content>
-	<content contentuid="hf3098a8ag8411g4347g97a3gba624e74aa10" version="1">Your hit point maximum increased by [1], damage taken from all sources is reduced by [2] and you have &lt;LSTag Tooltip="Advantage"&gt;Advantage&lt;/LSTag&gt; in all &lt;LSTag Tooltip="SavingThrow"&gt;Saving Throws&lt;/LSTag&gt;.</content>
+	<content contentuid="hf3098a8ag8411g4347g97a3gba624e74aa10" version="1">You gain [1] &lt;LSTag Tooltip="TemporaryHitPoints"&gt;temporary hit points&lt;, damage taken from all sources is reduced by [2] and you have &lt;LSTag Tooltip="Advantage"&gt;Advantage&lt;/LSTag&gt; in all &lt;LSTag Tooltip="SavingThrow"&gt;Saving Throws&lt;/LSTag&gt;.
+Additionally, if you have less than [3] &lt;LSTag Tooltip="TemporaryHitPoints"&gt;temporary hit points&lt; at the start of your turn in combat you regain [3] &lt;LSTag Tooltip="TemporaryHitPoints"&gt;temporary hit points&lt;.</content>
 
 	<content contentuid="h36209bb6g8c0bg4c50gb164gbef07a03c794" version="1">Buttkicking for Evil?</content>
-	<content contentuid="h588f7502g90e0g4cc1ga9a8g7f6776d6d1c6" version="1"></content>
+	<content contentuid="h588f7502g90e0g4cc1ga9a8g7f6776d6d1c6" version="1">You gain [1] &lt;LSTag Tooltip="TemporaryHitPoints"&gt;temporary hit points&lt; and damage taken from all sources is reduced by [2].</content>
 
 	<content contentuid="h7200749fg83ffg4009g805dg653ab032a88f" version="1">Help Me Step Wizard, I'm Stuck</content>
 	<content contentuid="hc0cd8628ge3d3g4abega26egd22a90cfc136" version="1"></content>
@@ -25,11 +26,8 @@
 	<content contentuid="h3ced58aag09b0g4355gab4eg10f4dce4063d" version="1"></content>
 
 	<content contentuid="h21042870g733ag4fb9gbe8bg8c47259f6350" version="1">Contemplating Genocide</content>
-	<content contentuid="hdf952ea6g01f4g4708ga465g7216cd721c9f" version="1"></content>
+	<content contentuid="hdf952ea6g01f4g4708ga465g7216cd721c9f" version="1">You gain [1] &lt;LSTag Tooltip="TemporaryHitPoints"&gt;temporary hit points&lt; and damage taken from all sources is reduced by [2].</content>
 
 	<content contentuid="h58b02c9dg26eag42deg8481g5c1aa721e8f7" version="1">Unbearable Goblins</content>
-	<content contentuid="h64c1abe5ge68fg4696g8593gbfa8f526107d" version="1">Your hit point maximum increased by [1] and damage taken from all sources is reduced by [2].</content>
-
-	<content contentuid="h9a0c39bfg34a6g44ddgbdcdgde0109b0e026" version="1">Goon's Protection</content>
-    <content contentuid="hea3f4b93gb5dbg4ebeg9a3bgf6f4f838a63b" version="1">This character is under the protection of Goonsack, being granted [1] &lt;LSTag Tooltip="TemporaryHitPoints"&gt;temporary hit points&lt;/LSTag&gt; until recruitment.</content>
+	<content contentuid="h64c1abe5ge68fg4696g8593gbfa8f526107d" version="1">You gain [1] &lt;LSTag Tooltip="TemporaryHitPoints"&gt;temporary hit points&lt; and damage taken from all sources is reduced by [2].</content>
 </contentList>

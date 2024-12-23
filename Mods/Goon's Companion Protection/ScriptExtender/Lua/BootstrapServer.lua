@@ -11,7 +11,7 @@ local companionPassives = {
             { boost = "Advantage(SavingThrow, Wisdom)" },
             { boost = "Advantage(SavingThrow, Charisma)" }
         },
-        status = nil -- No special status for Jaheira
+        status = "GOON_BUFF_COMPANION_TEMPHP_30"
     },
     ["S_Player_Minsc_0de603c5-42e2-4811-9dad-f652de080eba"] = {
         passive = "Goon_Buff_Companion_Temporary_Minsc",
@@ -19,7 +19,7 @@ local companionPassives = {
             { boost = "IncreaseMaxHP(15%)" },
             { boost = "DamageReduction(Melee,5)" }
         },
-        status = nil -- No special status for Minsc
+        status = nil
     --},
     --["S_Player_Gale_ad9af97d-75da-406a-ae13-7071c563f604"] = {
         --passive = "Goon_Buff_Companion_Temporary_Gale",
@@ -40,7 +40,8 @@ local companionPassives = {
         --boosts = {
             --{ boost = "IncreaseMaxHP(15%)" },
             --{ boost = "DamageReduction(Melee,10)" }
-        --}
+        --},
+        --status = nil
     },
     ["S_Player_Wyll_c774d764-4a17-48dc-b470-32ace9ce447d"] = {
         passive = "Goon_Buff_Companion_Temporary_Wyll",
@@ -54,14 +55,16 @@ local companionPassives = {
         --boosts = {
             --{ boost = "IncreaseMaxHP(10%)" },
             --{ boost = "DamageReduction(Healing,5)" }
-        --}
+        --},
+        --status = nil
     --},
     --["S_Player_Karlach_2c76687d-93a2-477b-8b18-8a14b549304c"] = {
         --passive = "Goon_Buff_Companion_Temporary_Karlach",
         --boosts = {
             --{ boost = "IncreaseMaxHP(25%)" },
             --{ boost = "DamageReduction(Fire,20)" }
-        --}
+        --},
+        --status = nil
     },
     ["S_GOB_DrowCommander_25721313-0c15-4935-8176-9f134385451b"] = {
         passive = "Goon_Buff_Companion_Temporary_Minthara",
@@ -134,15 +137,30 @@ local function removePassiveAndBoostsWithHealth(charID)
     end
 end
 
--- Listeners for applying and removing passives and boosts
-Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(level_name, is_editor_mode)
+-- Function to handle combat start and end
+local function handleCombat(isCombatStart)
     for charID, _ in pairs(companionPassives) do
         if Osi.IsPartyMember(charID, 0) == 0 then
-            applyPassiveAndBoostsWithHealth(charID)
+            if isCombatStart then
+                applyPassiveAndBoostsWithHealth(charID)
+            else
+                removePassiveAndBoostsWithHealth(charID)
+            end
         end
     end
+end
+
+-- Listener for combat start (apply buffs)
+Ext.Osiris.RegisterListener("EnteredCombat", 2, "before", function(object, combat)
+    handleCombat(true)  -- Apply buffs at the start of combat
 end)
 
+-- Listener for combat end (remove buffs)
+Ext.Osiris.RegisterListener("CombatEnded", 2, "after", function(combatGuid)
+    handleCombat(false)  -- Remove buffs at the end of combat
+end)
+
+-- Listeners for applying and removing passives and boosts when characters join/leave the party
 Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(charID)
     if companionPassives[charID] then
         applyPassiveAndBoostsWithHealth(charID)

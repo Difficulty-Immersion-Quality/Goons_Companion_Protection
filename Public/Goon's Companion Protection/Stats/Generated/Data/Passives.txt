@@ -5,7 +5,8 @@ data "Description" "hf3098a8ag8411g4347g97a3gba624e74aa10"
 data "DescriptionParams" ""
 data "Icon" "statIcons_MAG_TemporaryHP"
 data "Boosts" ""
-data "StatsFunctors" ""
+data "StatsFunctors" "ApplyStatus(GOON_BUFF_COMPANION_TEMPHP_REGEN_5)"
+data "StatsFunctorContext" "OnTurn"
 
 new entry "Goon_Buff_Companion_Temporary_Minsc"
 type "PassiveData"
@@ -87,33 +88,3 @@ data "DescriptionParams" ""
 data "Icon" "statIcons_MAG_TemporaryHP"
 data "Boosts" ""
 data "StatsFunctors" ""
-
-
-
-// ==================================== OLD ====================================
-
-//new entry "Goon_Buff_Companion_Temporary"
-//type "PassiveData"
-//data "DisplayName" "h9a0c39bfg34a6g44ddgbdcdgde0109b0e026"
-//data "Description" "hea3f4b93gb5dbg4ebeg9a3bgf6f4f838a63b"
-//data "DescriptionParams" "69"
-//data "Icon" "statIcons_MAG_TemporaryHP"
-//data "Boosts" ""
-//data "StatsFunctors" ""
-
-//new entry "Goon_Buff_Companion_Temporary_Status"
-//type "StatusData"
-//data "StatusType" "BOOST"
-//data "DisplayName" "h9a0c39bfg34a6g44ddgbdcdgde0109b0e026"
-//data "Description" "hea3f4b93gb5dbg4ebeg9a3bgf6f4f838a63b"
-//data "DescriptionParams" "69"
-//data "Icon" "statIcons_MAG_TemporaryHP"
-//data "SoundLoop" "Spell_Status_Buff_MO"
-//data "StackId" "TEMPORARY_HP"
-//data "StackPriority" "1"
-//data "Boosts" "TemporaryHP(69)"
-//data "RemoveConditions" "not HasTemporaryHP() or not HasPassive(Goon_Buff_Companion_Temporary)"
-//data "RemoveEvents" "OnDamage"
-//data "ManagedStatusEffectType" "Positive"
-//data "ManagedStatusEffectGroup" "6435c10a-c67d-4f79-8813-b84b0762f92b"
-
