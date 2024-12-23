@@ -82,35 +82,46 @@ local companionPassives = {
 }
 
 -- Define the global blocking status
-local GLOBAL_BLOCKING_STATUS = "GOON_BUFF_COMPANION_BLOCKER"
+-- local GLOBAL_BLOCKING_STATUS = "GOON_BUFF_COMPANION_BLOCKER"
 
 -- Function to apply the global blocking status to a character
 local function applyBlockingStatus(charID)
     -- Apply the blocking status to prevent passives from being added
-    Osi.ApplyStatus(charID, GLOBAL_BLOCKING_STATUS, -1, 1, charID)
+    Osi.ApplyStatus(charID, "GOON_BUFF_COMPANION_BLOCKER", -1, 1, charID)
 end
 
 -- Function to apply passives, boosts, and optional statuses
 local function applyPassiveAndBoostsWithHealth(charID)
     local config = companionPassives[charID]
-    if config and Osi.IsPartyMember(charID, 0) == 0 then
-        -- Check if the companion has the blocking status
-        if Osi.HasStatus(charID, config.status) == 0 then
-            -- Apply the specific passive
-            Osi.AddPassive(charID, config.passive)
+    if not config then
+        Ext.Utils.PrintWarning("No config found for character: " .. tostring(charID))
+        return
+    end
 
-            -- Apply boosts
-            for _, boost in ipairs(config.boosts) do
-                Osi.AddBoosts(charID, boost.boost, charID, charID)
-            end
+    -- Only process if the character is not in the party
+    if Osi.IsPartyMember(charID, 0) == 0 then
+        -- Apply the specific passive and boosts
+        Osi.AddPassive(charID, config.passive)
+        Ext.Utils.Print("Applying passive: " .. config.passive .. " to: " .. tostring(charID))
 
-            -- Apply status if configured
-            if config.status then
-                Osi.ApplyStatus(charID, config.status, -1, 1, charID)
-            end
+        for _, boost in ipairs(config.boosts) do
+            Ext.Utils.Print("Applying boost: " .. boost.boost .. " to: " .. tostring(charID))
+            Osi.AddBoosts(charID, boost.boost, charID, charID)
         end
+
+        -- Apply the specific status if defined
+        if config.status then
+            Ext.Utils.Print("Applying specific status: " .. config.status .. " to: " .. tostring(charID))
+            Osi.ApplyStatus(charID, config.status, -1, 1, charID)
+        end
+    else
+        Ext.Utils.Print("Character is in the party, skipping: " .. tostring(charID))
     end
 end
+
+
+
+
 
 -- Function to remove passives, boosts, and optional statuses
 local function removePassiveAndBoostsWithHealth(charID)
