@@ -13,8 +13,8 @@ Additionally, if you have less than [3] &lt;LSTag Tooltip="TemporaryHitPoints"&g
 	<content contentuid="hf8cb37f3ga331g4a29g8deeg8b4beec29e4d" version="1">Prepared for Boarish Battle</content>
 	<content contentuid="h8330071ag331bg4477gaa21g42a300542a2c" version="1"></content>
 
-	<content contentuid="hc562a9c5ga258g4f58gb83agfe5160a95442" version="1">Angered by Teethlings</content>
-	<content contentuid="h3ba4cdedg1630g47beg9418g0f05a79784b1" version="1"></content>
+	<content contentuid="hc562a9c5ga258g4f58gb83agfe5160a95442" version="1">Vlaakith's Will</content>
+	<content contentuid="h3ba4cdedg1630g47beg9418g0f05a79784b1" version="1">You gain [1] &lt;LSTag Tooltip="TemporaryHitPoints"&gt;temporary hit points&lt;/LSTag&gt; and damage taken from all sources is reduced by [2].</content>
 
 	<content contentuid="h495ebdceg09aag474cg9fa6gb719379cf2b2" version="1">Wyll's Ego</content>
 	<content contentuid="hd9a015f3g662fg4f0aga8f3g646ef53f5e10" version="1">You gain [1] &lt;LSTag Tooltip="TemporaryHitPoints"&gt;temporary hit points&lt;/LSTag&gt; and damage taken from all sources is reduced by [2].</content>

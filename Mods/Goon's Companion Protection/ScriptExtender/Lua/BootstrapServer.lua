@@ -33,14 +33,13 @@ local companionPassives = {
             --{ boost = "IncreaseMaxHP(5%)" },
             --{ boost = "DamageReduction(Sneak,10)" }
         --}
-    --},
-    --["S_Player_Laezel_58a69333-40bf-8358-1d17-fff240d7fb12"] = {
-        --passive = "Goon_Buff_Companion_Temporary_Laezel",
-        --boosts = {
-            --{ boost = "IncreaseMaxHP(15%)" },
-            --{ boost = "DamageReduction(Melee,10)" }
-        --},
-        --status = nil
+    },
+    ["S_Player_Laezel_58a69333-40bf-8358-1d17-fff240d7fb12"] = {
+        passive = "Goon_Buff_Companion_Temporary_Laezel",
+        boosts = {
+            { boost = "DamageReduction(All,3)" }
+        },
+        status = "GOON_BUFF_COMPANION_TEMPHP_30"
     },
     ["S_Player_Wyll_c774d764-4a17-48dc-b470-32ace9ce447d"] = {
         passive = "Goon_Buff_Companion_Temporary_Wyll",
