@@ -30,4 +30,8 @@ Additionally, if you have less than [3] &lt;LSTag Tooltip="TemporaryHitPoints"&g
 
 	<content contentuid="h58b02c9dg26eag42deg8481g5c1aa721e8f7" version="1">Unbearable Goblins</content>
 	<content contentuid="h64c1abe5ge68fg4696g8593gbfa8f526107d" version="1">You gain [1] &lt;LSTag Tooltip="TemporaryHitPoints"&gt;temporary hit points&lt;/LSTag&gt; and damage taken from all sources is reduced by [2].</content>
+
+	<content contentuid="h52686c0ag3fdfg454cgadb8g7a360a1f0459" version="1">Goon's Companion Protection</content>
+	<content contentuid="hfa7aa2f4g42cfg42bbgbb6bg2f4008bc1678" version="1">You gain [1] &lt;LSTag Tooltip="TemporaryHitPoints"&gt;temporary hit points&lt;/LSTag&gt; and damage taken from all sources is reduced by [2].</content>
+	<content contentuid="h807f4600g99d1g4cc4gb515ga5c2d2499eb6" version="1">you have &lt;LSTag Tooltip="Advantage"&gt;Advantage&lt;/LSTag&gt; in all &lt;LSTag Tooltip="SavingThrow"&gt;Saving Throws&lt;/LSTag&gt;.</content>
 </contentList>

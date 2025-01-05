@@ -44,10 +44,11 @@ local companionPassives = {
     ["S_Player_Wyll_c774d764-4a17-48dc-b470-32ace9ce447d"] = {
         passive = "Goon_Buff_Companion_Temporary_Wyll",
         boosts = {
-            { boost = "DamageReduction(All, Flat, 3)" }
+            { boost = "" }
         },
         statuses = {  -- Using a table for statuses
-            "GOON_BUFF_COMPANION_TEMPHP_30"
+            "GOON_BUFF_COMPANION_TEMPHP_30",
+            "GOON_BUFF_COMPANION_DAMAGE_REDUCTION_3"
         }
     --},
     --["S_Player_ShadowHeart_3ed74f06-3c60-42dc-83f6-f034cb47c679"] = {
@@ -117,22 +118,36 @@ local function applyBuffs(charID)
 
     -- Only process if the character is not in the party
     if Osi.IsPartyMember(charID, 0) == 0 then
-        Osi.AddPassive(charID, config.passive)
-        Ext.Utils.Print("Applying passive: " .. config.passive .. " to: " .. tostring(charID))
-
-        for _, boost in ipairs(config.boosts) do
-            Ext.Utils.Print("Applying boost: " .. boost.boost .. " to: " .. tostring(charID))
-            Osi.AddBoosts(charID, boost.boost, charID, charID)
+        -- Apply the passive
+        if config.passive then
+            Osi.AddPassive(charID, config.passive)
+            Ext.Utils.Print("Applying passive: " .. config.passive .. " to: " .. tostring(charID))
         end
 
-        if config.status then
-            Ext.Utils.Print("Applying specific status: " .. config.status .. " to: " .. tostring(charID))
-            Osi.ApplyStatus(charID, config.status, -1, 1, charID)
+        -- Apply the boosts
+        if config.boosts and #config.boosts > 0 then
+            for _, boostEntry in ipairs(config.boosts) do
+                Ext.Utils.Print("Applying boost: " .. boostEntry.boost .. " to: " .. tostring(charID))
+                Osi.AddBoosts(charID, boostEntry.boost, charID, charID)
+            end
+        else
+            Ext.Utils.PrintWarning("No boosts found for character: " .. tostring(charID))
+        end
+
+        -- Apply the statuses
+        if config.statuses and #config.statuses > 0 then
+            for _, status in ipairs(config.statuses) do
+                Ext.Utils.Print("Applying status: " .. status .. " to: " .. tostring(charID))
+                Osi.ApplyStatus(charID, status, -1, 1, charID)
+            end
+        else
+            Ext.Utils.PrintWarning("No statuses found for character: " .. tostring(charID))
         end
     else
         Ext.Utils.Print("Character is in the party, skipping: " .. tostring(charID))
     end
 end
+
 
 -- Function to handle combat events
 local function handleCombat(charID, combatID)
