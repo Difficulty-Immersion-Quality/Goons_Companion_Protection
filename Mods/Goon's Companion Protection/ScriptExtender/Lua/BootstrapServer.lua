@@ -98,9 +98,9 @@ local companionPassives = {
 local tTemp = {}
 
 -- Function to apply the global blocking status to a character
-local function applyBlockingStatus(charID)
-    Osi.ApplyStatus(charID, "GOON_BUFF_COMPANION_BLOCKER", -1, 1, charID)
-end
+--local function applyBlockingStatus(charID)
+    --Osi.ApplyStatus(charID, "GOON_BUFF_COMPANION_BLOCKER", -1, 1, charID)
+--end
 
 -- Function to apply passives, boosts, and optional statuses
 local function applyBuffs(charID)
@@ -148,6 +148,29 @@ local function applyBuffs(charID)
     end
 end
 
+-- Function to remove passives, boosts, and statuses for a character
+local function removeBuffs(charID)
+    -- Remove any passives (replace with your actual passive names)
+    -- Example: Osi.RemovePassive(charID, "SomePassiveName")
+    for _, passive in ipairs(companionPassives[charID].passives or {}) do
+        Osi.RemovePassive(charID, passive)
+        Ext.Utils.Print("Removed passive: " .. passive .. " from: " .. tostring(charID))
+    end
+
+    -- Remove any boosts (replace with your actual boost names)
+    for _, boost in ipairs(companionPassives[charID].boosts or {}) do
+        Osi.RemoveBoosts(charID, boost.boost, 0, charID, charID)
+        Ext.Utils.Print("Removed boost: " .. boost.boost .. " from: " .. tostring(charID))
+    end
+
+    -- Remove any statuses (replace with your actual status names)
+    for _, status in ipairs(companionPassives[charID].statuses or {}) do
+        if Osi.HasActiveStatus(charID, status) == 1 then
+            Osi.RemoveStatus(charID, status)
+            Ext.Utils.Print("Removed status: " .. status .. " from: " .. tostring(charID))
+        end
+    end
+end
 
 -- Function to handle combat events
 local function handleCombat(charID, combatID)
@@ -193,11 +216,8 @@ end)
 -- Listener for when a character joins the party
 Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(charID)
     if companionPassives[charID] then
-        -- Apply the blocking status to prevent the passive from being applied
-        --applyBlockingStatus(charID)
-
         -- Remove any existing passives, boosts, and statuses
-        removePassiveAndBoostsWithHealth(charID)
+        removeBuffs(charID)
     end
 end)
 
