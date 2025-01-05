@@ -47,7 +47,7 @@ local companionPassives = {
             { boost = "DamageReduction(All,3)" }
         },
         status = "GOON_BUFF_COMPANION_TEMPHP_30"
-    --},
+        --},
     --["S_Player_ShadowHeart_3ed74f06-3c60-42dc-83f6-f034cb47c679"] = {
         --passive = "Goon_Buff_Companion_Temporary_ShadowHeart",
         --boosts = {
@@ -80,30 +80,29 @@ local companionPassives = {
     }
 }
 
--- Define the global blocking status
--- local GLOBAL_BLOCKING_STATUS = "GOON_BUFF_COMPANION_BLOCKER"
+-- Temporary table to track characters who have received buffs in the current combat
+local tTemp = {}
 
 -- Function to apply the global blocking status to a character
---local function applyBlockingStatus(charID)
-    -- Apply the blocking status to prevent passives from being added
-    --Osi.ApplyStatus(charID, "GOON_BUFF_COMPANION_BLOCKER", -1, 1, charID)
---end
+local function applyBlockingStatus(charID)
+    Osi.ApplyStatus(charID, "GOON_BUFF_COMPANION_BLOCKER", -1, 1, charID)
+end
 
 -- Function to apply passives, boosts, and optional statuses
-local function applyPassiveAndBoostsWithHealth(charID)
+local function applyBuffs(charID)
     local config = companionPassives[charID]
     if not config then
         Ext.Utils.PrintWarning("No config found for character: " .. tostring(charID))
         return
     end
 
-    -- Check for blocking status
+    -- Check if the blocking status is active
     --if Osi.HasActiveStatus(charID, "GOON_BUFF_COMPANION_BLOCKER") == 1 then
-        --Ext.Utils.Print("Blocking status detected for: " .. tostring(charID) .. ". Skipping buffs.")
+        --Ext.Utils.Print("Blocking status active for: " .. tostring(charID) .. ". Buffs will not be applied.")
         --return
     --end
 
-    -- Apply passives and boosts if the character is not in the party
+    -- Only process if the character is not in the party
     if Osi.IsPartyMember(charID, 0) == 0 then
         Osi.AddPassive(charID, config.passive)
         Ext.Utils.Print("Applying passive: " .. config.passive .. " to: " .. tostring(charID))
@@ -113,7 +112,6 @@ local function applyPassiveAndBoostsWithHealth(charID)
             Osi.AddBoosts(charID, boost.boost, charID, charID)
         end
 
-        -- Apply the specific status if defined
         if config.status then
             Ext.Utils.Print("Applying specific status: " .. config.status .. " to: " .. tostring(charID))
             Osi.ApplyStatus(charID, config.status, -1, 1, charID)
@@ -123,43 +121,46 @@ local function applyPassiveAndBoostsWithHealth(charID)
     end
 end
 
--- Function to remove passives, boosts, and optional statuses
-local function removePassiveAndBoostsWithHealth(charID)
-    local config = companionPassives[charID]
-    if config and Osi.IsPartyMember(charID, 1) == 1 then
-        -- Remove the specific passive
-        Osi.RemovePassive(charID, config.passive)
-
-        -- Remove boosts
-        for _, boost in ipairs(config.boosts) do
-            Osi.RemoveBoosts(charID, boost.boost, 0, charID, charID)
-        end
-
-        -- Remove status if configured
-        if config.status then
-            Osi.RemoveStatus(charID, config.status)
+-- Function to handle combat events
+local function handleCombat(charID, combatID)
+    if companionPassives[charID] and not tTemp[combatID] then
+        tTemp[combatID] = tTemp[combatID] or {} -- Initialize table for this combat ID
+        if not tTemp[combatID][charID] then
+            Ext.Utils.Print("Processing buffs for: " .. tostring(charID) .. " in combat: " .. tostring(combatID))
+            applyBuffs(charID)
+            tTemp[combatID][charID] = true -- Mark character as processed
+        else
+            Ext.Utils.Print("Character already processed for this combat: " .. tostring(charID))
         end
     end
 end
-
--- Function to handle combat start and end
-local function handleCombat(isCombatStart)
-    for charID, _ in pairs(companionPassives) do
-        if isCombatStart then
-            applyPassiveAndBoostsWithHealth(charID)
-        end
-    end
-end
-
 
 -- Listener for combat start (apply buffs)
-Ext.Osiris.RegisterListener("EnteredCombat", 2, "before", function(object, combat)
-    handleCombat(true)  -- Apply buffs at the start of combat
+Ext.Osiris.RegisterListener("EnteredCombat", 2, "before", function(char, combatID)
+    -- Ensure character and combatID are valid
+    if char and combatID then
+        -- Retrieve the character's GUID
+        local charID = Osi.GetGUID(char)
+
+        -- Check if the character exists in the table
+        if companionPassives[charID] then
+            -- Call the combat handling function
+            handleCombat(charID, combatID)
+        end
+    else
+        -- Debugging in case of invalid parameters
+        Ext.Utils.PrintError("EnteredCombat triggered with invalid parameters!")
+        if not char then Ext.Utils.PrintError("Character is nil!") end
+        if not combatID then Ext.Utils.PrintError("CombatID is nil!") end
+    end
 end)
 
--- Listener for combat ongoing (apply buffs as needed)
---Ext.Osiris.RegisterListener("CombatEnded", 2, "after", function(combatGuid)
-    --handleCombat(true)  -- Reapply buffs in case of any changes during combat
+-- Listener for combat end (clear temporary table for the combat ID)
+--Ext.Osiris.RegisterListener("CombatEnded", 2, "after", function(combatID)
+    --if tTemp[combatID] then
+        --Ext.Utils.Print("Clearing temporary table for combat: " .. tostring(combatID))
+        --tTemp[combatID] = nil -- Clear the table for this combat ID
+    --end
 --end)
 
 
