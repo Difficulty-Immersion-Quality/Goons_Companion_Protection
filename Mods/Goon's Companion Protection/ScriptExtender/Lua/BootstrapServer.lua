@@ -84,10 +84,10 @@ local companionPassives = {
 -- local GLOBAL_BLOCKING_STATUS = "GOON_BUFF_COMPANION_BLOCKER"
 
 -- Function to apply the global blocking status to a character
-local function applyBlockingStatus(charID)
+--local function applyBlockingStatus(charID)
     -- Apply the blocking status to prevent passives from being added
-    Osi.ApplyStatus(charID, "GOON_BUFF_COMPANION_BLOCKER", -1, 1, charID)
-end
+    --Osi.ApplyStatus(charID, "GOON_BUFF_COMPANION_BLOCKER", -1, 1, charID)
+--end
 
 -- Function to apply passives, boosts, and optional statuses
 local function applyPassiveAndBoostsWithHealth(charID)
@@ -97,9 +97,14 @@ local function applyPassiveAndBoostsWithHealth(charID)
         return
     end
 
-    -- Only process if the character is not in the party
+    -- Check for blocking status
+    --if Osi.HasActiveStatus(charID, "GOON_BUFF_COMPANION_BLOCKER") == 1 then
+        --Ext.Utils.Print("Blocking status detected for: " .. tostring(charID) .. ". Skipping buffs.")
+        --return
+    --end
+
+    -- Apply passives and boosts if the character is not in the party
     if Osi.IsPartyMember(charID, 0) == 0 then
-        -- Apply the specific passive and boosts
         Osi.AddPassive(charID, config.passive)
         Ext.Utils.Print("Applying passive: " .. config.passive .. " to: " .. tostring(charID))
 
@@ -117,10 +122,6 @@ local function applyPassiveAndBoostsWithHealth(charID)
         Ext.Utils.Print("Character is in the party, skipping: " .. tostring(charID))
     end
 end
-
-
-
-
 
 -- Function to remove passives, boosts, and optional statuses
 local function removePassiveAndBoostsWithHealth(charID)
@@ -157,16 +158,16 @@ Ext.Osiris.RegisterListener("EnteredCombat", 2, "before", function(object, comba
 end)
 
 -- Listener for combat ongoing (apply buffs as needed)
-Ext.Osiris.RegisterListener("CombatEnded", 2, "after", function(combatGuid)
-    handleCombat(true)  -- Reapply buffs in case of any changes during combat
-end)
+--Ext.Osiris.RegisterListener("CombatEnded", 2, "after", function(combatGuid)
+    --handleCombat(true)  -- Reapply buffs in case of any changes during combat
+--end)
 
 
 -- Listener for when a character joins the party
 Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(charID)
     if companionPassives[charID] then
         -- Apply the blocking status to prevent the passive from being applied
-        applyBlockingStatus(charID)
+        --applyBlockingStatus(charID)
 
         -- Remove any existing passives, boosts, and statuses
         removePassiveAndBoostsWithHealth(charID)
