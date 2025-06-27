@@ -11,6 +11,6 @@ local opts = {
     DontCache = false
 }
 
-Ext.Vars.RegisterModVariable(ModuleUUID, "GoonProtection", opts)
-Ext.Vars.RegisterModVariable(ModuleUUID, "GoonNotProtection", opts)
+Ext.Vars.RegisterModVariable(ModuleUUID, "GoonProtection_On", opts)
+Ext.Vars.RegisterModVariable(ModuleUUID, "GoonProtection_Off", opts)
 Ext.Require("Server/_Core.lua")
