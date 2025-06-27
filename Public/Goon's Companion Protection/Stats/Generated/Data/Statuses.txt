@@ -1,8 +1,3 @@
-new entry "GOON_BUFF_COMPANION_BLOCKER"
-type "StatusData"
-data "StatusType" "BOOST"
-data "StatusPropertyFlags" "ApplyToDead;IgnoreResting;DisableOverhead;DisableCombatlog;DisablePortraitIndicator"
-
 new entry "GOON_BUFF_COMPANION_TEMPHP_30"
 type "StatusData"
 data "StatusType" "BOOST"
@@ -18,7 +13,6 @@ data "RemoveConditions" "not HasTemporaryHP()"
 data "RemoveEvents" "OnDamage"
 data "StatusGroups" "SG_RemoveOnRespec"
 
-
 new entry "GOON_BUFF_COMPANION_TEMPHP_REGEN_5"
 type "StatusData"
 data "StatusType" "BOOST"
@@ -30,7 +24,6 @@ data "Boosts" "TemporaryHP(5)"
 data "RemoveConditions" ""
 data "RemoveEvents" "OnDamage"
 data "StatusGroups" "SG_RemoveOnRespec"
-
 
 new entry "GOON_BUFF_COMPANION_DAMAGE_REDUCTION_3"
 type "StatusData"
