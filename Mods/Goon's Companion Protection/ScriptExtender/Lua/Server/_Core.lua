@@ -153,12 +153,8 @@ Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(charID)
     removeBuffs(charID)
 end)
 
-Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(_, _)
-    for _, entity in ipairs(Ext.Entity.GetAllEntitiesWithComponent("ServerCharacter")) do
-        local charID = entity.Uuid and entity.Uuid.EntityUuid or entity
-
-        if companionPassives[charID] then
-            applyBuffs(charID)
-        end
+Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(levelName, isEditor)
+    for charID, _ in pairs(companionPassives) do
+        applyBuffs(charID)
     end
 end)
