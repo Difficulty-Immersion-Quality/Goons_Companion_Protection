@@ -104,7 +104,6 @@ local function GetCharName(charID)
     return name
 end
 
--- Apply buffs if never joined party
 local function applyBuffs(charID)
     local applied = GoonProtection_On_Vars()
     local blocked = GoonProtection_Off_Vars()
@@ -114,24 +113,30 @@ local function applyBuffs(charID)
     local config = companionPassives[charID]
 
     if not config then
-        --Ext.Utils.PrintWarning("No config found for %s (%s).", charName, charID)
+        Ext.Utils.PrintWarning("No config found for %s (%s).", charName, charID)
         return
     end
 
     if Osi.IsPartyMember(charID, 0) == 0 then
+        -- If this is a player-controlled character, block buffs and mark as blocked
+        if Osi.IsPlayer(charID) == 1 then
+            blocked[charID] = true
+            Ext.Utils.Print("%s (%s) is a player, blocking buffs.", charName, charID)
+            return
+        end
         if config.passive then
             Osi.AddPassive(charID, config.passive)
-            --Ext.Utils.Print("Applied passive to %s (%s).", charName, charID)
+            Ext.Utils.Print("Applied passive to %s (%s).", charName, charID)
         end
         if config.statuses then
             for _, status in ipairs(config.statuses) do
                 Osi.ApplyStatus(charID, status, -1, 1, charID)
-                --Ext.Utils.Print("Applied status %s to %s.", status, charName)
+                Ext.Utils.Print("Applied status %s to %s.", status, charName)
             end
         end
         applied[charID] = true
     else
-        --Ext.Utils.Print("%s (%s) is already recruited, skipping buffs.", charName, charID)
+        Ext.Utils.Print("%s (%s) is already recruited, skipping buffs.", charName, charID)
     end
 end
 
@@ -144,24 +149,24 @@ local function removeBuffs(charID)
     local config = companionPassives[charID]
 
     if not config then
-        --Ext.Utils.PrintWarning("No config found for %s (%s)", charName, charID)
+        Ext.Utils.PrintWarning("No config found for %s (%s)", charName, charID)
         return
     end
 
     if config.passive then
         Osi.RemovePassive(charID, config.passive)
-        --Ext.Utils.Print("Removed passive from %s (%s).", charName, charID)
+        Ext.Utils.Print("Removed passive from %s (%s).", charName, charID)
     end
     if config.statuses then
         for _, status in ipairs(config.statuses) do
             Osi.RemoveStatus(charID, status)
-            --Ext.Utils.Print("Removed status %s from %s.", status, charName)
+            Ext.Utils.Print("Removed status %s from %s.", status, charName)
         end
     end
 
     blocked[charID] = true
     applied[charID] = nil
-    --Ext.Utils.Print("Marked %s (%s) as recruited — no future buffs will be applied.", charName, charID)
+    Ext.Utils.Print("Marked %s (%s) as recruited — no future buffs will be applied.", charName, charID)
 end
 
 -- Register listeners
@@ -170,6 +175,11 @@ Ext.Osiris.RegisterListener("EnteredCombat", 2, "before", function(charID)
 end)
 
 Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(levelName, isEditor)
+    -- Exception: skip buff logic if in character creation level
+    if Osi.IsCharacterCreationLevel(levelName) == 1 then
+        Ext.Utils.Print("[GoonCompanionProtection] Skipping buff application during character creation.")
+        return
+    end
     for charID, _ in pairs(companionPassives) do
         applyBuffs(charID)
     end
@@ -187,6 +197,6 @@ Ext.Osiris.RegisterListener("UnregisterAsCompanion", 1, "after", function(charac
     blocked[character] = nil -- ✅ Remove the block
     applied[character] = nil -- ✅ Optional: clear prior record in case re-buffing is needed
 
-    --Ext.Utils.Print("Unregistered companion %s — now eligible for buffs again.", GetCharName(character))
+    Ext.Utils.Print("Unregistered companion %s — now eligible for buffs again.", GetCharName(character))
     applyBuffs(character)
 end)
