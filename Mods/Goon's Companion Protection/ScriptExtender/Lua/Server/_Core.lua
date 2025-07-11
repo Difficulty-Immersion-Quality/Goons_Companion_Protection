@@ -104,6 +104,15 @@ local function GetCharName(charID)
     return name
 end
 
+local function FindCompanionKeyByGUID(guid)
+    for key, _ in pairs(companionPassives) do
+        if key:find(guid, 1, true) then
+            return key
+        end
+    end
+    return nil
+end
+
 local function applyBuffs(charID)
     local applied = GoonProtection_On_Vars()
     local blocked = GoonProtection_Off_Vars()
@@ -143,10 +152,16 @@ end
 local function removeBuffs(charID)
     local applied = GoonProtection_On_Vars()
     local blocked = GoonProtection_Off_Vars()
-    if blocked[charID] then return end
 
-    local charName = GetCharName(charID)
+    -- Try to find the correct key if not found directly
     local config = companionPassives[charID]
+    local charName = GetCharName(charID)
+    local key = charID
+
+    if not config then
+        key = FindCompanionKeyByGUID(charID)
+        config = companionPassives[key]
+    end
 
     if not config then
         Ext.Utils.PrintWarning("No config found for %s (%s)", charName, charID)
@@ -164,8 +179,8 @@ local function removeBuffs(charID)
         end
     end
 
-    blocked[charID] = true
-    applied[charID] = nil
+    blocked[key] = true
+    applied[key] = nil
     Ext.Utils.Print("Marked %s (%s) as recruited — no future buffs will be applied.", charName, charID)
 end
 
